@@ -2,6 +2,8 @@
 This class represents a todo item and its associated
 data: the todo title and a flag that shows whether the
 todo item is done
+
+WRITE NOTES FOR CODE!!!
 */
 
 class Todo {
