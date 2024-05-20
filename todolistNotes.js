@@ -1,9 +1,13 @@
 /*
-This class represents a todo item and its associated
-data: the todo title and a flag that shows whether the
-todo item is done
+Project To do:
+Clarify fitler logic
 
-WRITE NOTES FOR CODE!!!
+*/
+
+/*
+This class represents a todo ITEM and its ASSOCIATED
+DATA: the TODO TITLE AND a FLAG that shows whether the
+todo item is done
 */
 
 class Todo {
@@ -19,6 +23,10 @@ class Todo {
       let marker = this.isDone() ? Todo.DONE_MARKER : Todo.UNDONE_MARKER;
       return `[${marker}] ${this.title}`;
     }
+    /*
+    Invoke 'toString' to visualize in terminal via console.log
+      - "todo ITEM and its ASSOCIATED DATA: the TODO TITLE AND a FLAG"
+    */
   
     markDone() {
       this.done = true;
@@ -47,11 +55,11 @@ class Todo {
       this.todos = [];
     }
   
-    add(todo) {
+    add(todo) { // Arg needs to be an INSTANCE of todo Constructor
       if (!(todo instanceof Todo)) {
         throw new TypeError("can only add Todo objects");
       }
-  
+      // To array 'todos' push arg provided
       this.todos.push(todo);
     }
   
@@ -102,20 +110,90 @@ class Todo {
       let list = this.todos.map(todo => todo.toString()).join("\n");
       return `${title}\n${list}`;
     }
-  
+
+    /*
+    Custom Project forEach Method - RECURSIVE VERSION
+    - Reason: Now, have a standard way to iterate through the todos on a todo list
+     
+     ```
+     list.forEach(todo => {
+     // Do something with each todo
+     });
+     ```
+
+    Method 'forEach' that TAKES a CALLBACK function as an argument
+    The method 'forEach' then applies the method to its 'todos' array
+    where for each elem of 'todos' array, we invoke the callback PROVIDED
+    
+    ie (argument):
+    list.forEach(todo => console.log(todo.toString()));
+    */
+
+    /*
     forEach(callback) {
-      this.todos.forEach(todo => callback(todo));
+      this.todos.forEach(callback);  //todo => callback(todo)
+      //accessing 'todos' array
     }
-  
+    */
+
+
+    /* 
+    Non Recusive Version
+
+    'forEach' method that takes a callback method
+    we the begin an iteration of 'todos' array
+    Per iter, invoke callback arg on each elem iter of 'todos' array
+    */
+    forEach(callback) {
+      for (let index = 0; index < this.size(); index += 1) {
+        callback(this.todos[index]);
+      }
+    }
+
+    /*
+    Notes on why create custom forEach
+
+    Custom - easier to work with methods defined by the TodoList class.
+           - don't have to access the internal state of the TodoList object.
+    list.forEach(todo => {
+    // Do something with each todo 
+    });
+    
+    Default - 
+    list.todos.forEach(todo => {
+    // Do something
+    });
+
+    */
+
+    
+    /*
+    Custom Filter
+
+    Takes a callback function
+    creates a 'newList' var that holds reference to new object created by 'todoList' constructor 
+      - arg is 'current obj (this)' title
+
+    Iterate 'current obj' 'todos' arr and per todo
+    check if value of invoking 'callback' arg using current 'todo' elem is truthy value
+    if true: to local 'newList' variable, add current iter elem 'todo'
+    if false: skip to next iter
+
+    After iter, return arr
+
+    doneTodos - Variable that returns array of COMPLETED TO DO
+    let doneTodos = list.filter(todo => todo.isDone());
+    console.log(doneTodos);
+    */
     filter(callback) {
-      let newList = new TodoList(this.title);
-      this.forEach(todo => {
-        if (callback(todo)) {
-          newList.add(todo);
+      let newList = new TodoList(this.title); // ARR to be returned
+      this.forEach(todo => { // iter this obj's 'todos' array, per elem ('todo')
+        if (callback(todo)) { // check if value of - using 'todo' elem as arg to callback - is TRUTHY
+          newList.add(todo);  // if true, add 'todo' elem to this obj 'todos' array
         }
       });
   
-      return newList;
+      return newList; // Need to Clarify, how are we returning array when new list is an object?
     }
   
     findByTitle(title) {
